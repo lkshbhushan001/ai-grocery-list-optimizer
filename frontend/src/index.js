@@ -1,13 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-app.get('/', (req, res) => {
-    res.send('Grocery List Optimizer Backend');
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
+ReactDOM.render(<App />, document.getElementById('root'));

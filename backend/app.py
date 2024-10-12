@@ -1,45 +1,38 @@
-from flask import Flask, request, jsonify
-from models.user import User
-from routes.user_routes import user_blueprint
-from routes.grocery_routes import grocery_blueprint
-from config import db
+from flask import Flask
 from flask_cors import CORS
+from config.settings import Config
+from api.routes import api
+from models import Item, shoppinglist
+from pymongo import MongoClient
+
 
 app = Flask(__name__)
-CORS(app)  # This will enable CORS for all routes
+app.config.from_object(Config)
+CORS(app)  # Enable CORS
+# Load configuration
+app.config.from_object(Config)
 
+# Initialize MongoDB Client
+client = MongoClient(Config.MONGO_URI)
+db = client.Cluster0  # Replace with your actual database name
 
-app = Flask(__name__)
+# Register API Blueprint
+app.register_blueprint(api)
 
+# Define a basic route for testing
 @app.route('/')
 def home():
-    return "Welcome to the Grocery Shopping List Optimizer!"
+    return "Welcome to the AI-Based Grocery Shopping List Optimizer!"
 
-if __name__ == "__main__":
+# Error handling
+@app.errorhandler(404)
+def not_found(error):
+    return {"message": "Not found"}, 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return {"message": "Internal Server Error"}, 500
+
+# Run the application
+if __name__ == '__main__':
     app.run(debug=True)
-
-
-app = Flask(__name__)
-
-@app.route('/user/preferences', methods=['POST'])
-def save_preferences():
-    data = request.get_json()
-    user = User(
-        name=data['name'],
-        preferences=data['preferences'],
-        dietary_restrictions=data['dietary_restrictions']
-    )
-    user.save_to_db()
-    return jsonify({"message": "User preferences saved"}), 201
-
-
-app = Flask(__name__)
-
-# Registering Blueprints (Modular Routes)
-app.register_blueprint(user_blueprint)
-app.register_blueprint(grocery_blueprint)
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
