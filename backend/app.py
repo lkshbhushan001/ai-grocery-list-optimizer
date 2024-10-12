@@ -3,6 +3,11 @@ from models.user import User
 from routes.user_routes import user_blueprint
 from routes.grocery_routes import grocery_blueprint
 from config import db
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
+
 
 app = Flask(__name__)
 
