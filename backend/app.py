@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
 from models.user import User
+from routes.user_routes import user_blueprint
+from routes.grocery_routes import grocery_blueprint
+from config import db
 
 app = Flask(__name__)
 
@@ -23,4 +26,15 @@ def save_preferences():
     )
     user.save_to_db()
     return jsonify({"message": "User preferences saved"}), 201
+
+
+app = Flask(__name__)
+
+# Registering Blueprints (Modular Routes)
+app.register_blueprint(user_blueprint)
+app.register_blueprint(grocery_blueprint)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 
