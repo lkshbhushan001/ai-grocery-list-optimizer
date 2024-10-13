@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import axios from '../api/api';
+import React from 'react';
 
-function GroceryList() {
-    const [items, setItems] = useState([]);
-
-    useEffect(() => {
-        const fetchItems = async () => {
-            const response = await axios.get('/items');
-            setItems(response.data);
-        };
-        fetchItems();
-    }, []);
-
-    return (
-        <div>
-            <h2>Grocery List</h2>
-            <ul>
-                {items.map(item => (
-                    <li key={item.id}>{item.name} (Quantity: {item.quantity})</li>
-                ))}
-            </ul>
-        </div>
-    );
+function GroceryList({ items }) {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>
+          {item.name} - {item.quantity} units - Expires on {item.expiry_date}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export default GroceryList;

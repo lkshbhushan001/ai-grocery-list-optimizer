@@ -4,7 +4,7 @@ from config import Config
 
 # Initialize MongoDB Client
 client = MongoClient(Config.MONGO_URI)
-db = client.Cluster0  
+db = client.grocery_optimization  
 
 class ShoppingList:
     def __init__(self, name, items):
