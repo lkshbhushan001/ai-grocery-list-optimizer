@@ -1,16 +1,12 @@
 import React from 'react';
 
-function ShoppingCart({ items }) {
-    return (
-        <div>
-            <h2>Your Shopping Cart</h2>
-            <ul>
-                {items.map(item => (
-                    <li key={item.id}>{item.name} (x{item.quantity})</li>
-                ))}
-            </ul>
-        </div>
-    );
+function ShoppingCart() {
+  return (
+    <div>
+      <h1>Your Shopping Cart</h1>
+      <p>Items you plan to purchase soon...</p>
+    </div>
+  );
 }
 
 export default ShoppingCart;

@@ -1,28 +1,46 @@
 import React, { useState } from 'react';
+import axios from '../api/api';
 
-function ItemForm({ onAddItem }) {
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [usageRate, setUsageRate] = useState('');
+function ItemForm() {
+  const [item, setItem] = useState({
+    name: '',
+    quantity: '',
+    price: '',
+    expiration_date: ''
+  });
+
+  const handleChange = (e) => {
+    setItem({
+      ...item,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    debugger;
-    onAddItem({
-      name,
-      quantity: parseInt(quantity),
-      expiry_date: expiryDate,
-      usage_rate: parseFloat(usageRate)
+    axios.post('/items', item).then((response) => {
+      console.log('Item added:', response.data);
     });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Item Name" value={name} onChange={e => setName(e.target.value)} />
-      <input type="number" placeholder="Quantity" value={quantity} onChange={e => setQuantity(e.target.value)} />
-      <input type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
-      <input type="number" placeholder="Usage Rate (per day)" value={usageRate} onChange={e => setUsageRate(e.target.value)} />
+      <label>
+        Item Name:
+        <input type="text" name="name" value={item.name} onChange={handleChange} />
+      </label>
+      <label>
+        Quantity:
+        <input type="number" name="quantity" value={item.quantity} onChange={handleChange} />
+      </label>
+      <label>
+        Price:
+        <input type="number" name="price" value={item.price} onChange={handleChange} />
+      </label>
+      <label>
+        Expiration Date:
+        <input type="date" name="expiration_date" value={item.expiration_date} onChange={handleChange} />
+      </label>
       <button type="submit">Add Item</button>
     </form>
   );
