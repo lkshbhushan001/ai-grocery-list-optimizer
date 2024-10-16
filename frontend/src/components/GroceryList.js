@@ -1,25 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../api/api';
+import { getItems, deleteItem } from '../api/api';
 
-function GroceryList() {
+const GroceryList = () => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    axios.get('/items').then((response) => setItems(response.data));
+    async function fetchData() {
+      try {
+        const data = await getItems();
+        setItems(data);
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      }
+    }
+    fetchData();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteItem(id);
+      setItems(items.filter(item => item.id !== id));
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
 
   return (
     <div>
       <h1>Grocery List</h1>
       <ul>
-        {items.map((item) => (
+        {items.map(item => (
           <li key={item.id}>
-            {item.name} - {item.quantity} pcs - ${item.price}
+            {item.name} 
+            <button onClick={() => handleDelete(item.id)}>Delete</button>
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
 
 export default GroceryList;

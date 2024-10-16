@@ -1,49 +1,35 @@
 import React, { useState } from 'react';
-import axios from '../api/api';
+import { createItem, updateItem } from '../api/api';
 
-function ItemForm() {
-  const [item, setItem] = useState({
-    name: '',
-    quantity: '',
-    price: '',
-    expiration_date: ''
-  });
+const ItemForm = ({ currentItem, setCurrentItem }) => {
+  const [name, setName] = useState(currentItem ? currentItem.name : '');
 
-  const handleChange = (e) => {
-    setItem({
-      ...item,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post('/items', item).then((response) => {
-      console.log('Item added:', response.data);
-    });
+    try {
+      if (currentItem) {
+        await updateItem(currentItem.id, { name });
+      } else {
+        await createItem({ name });
+      }
+      setCurrentItem(null);  // Reset after creating/updating
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Item Name:
-        <input type="text" name="name" value={item.name} onChange={handleChange} />
-      </label>
-      <label>
-        Quantity:
-        <input type="number" name="quantity" value={item.quantity} onChange={handleChange} />
-      </label>
-      <label>
-        Price:
-        <input type="number" name="price" value={item.price} onChange={handleChange} />
-      </label>
-      <label>
-        Expiration Date:
-        <input type="date" name="expiration_date" value={item.expiration_date} onChange={handleChange} />
-      </label>
-      <button type="submit">Add Item</button>
+      <input 
+        type="text" 
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+        placeholder="Item name" 
+        required 
+      />
+      <button type="submit">{currentItem ? 'Update' : 'Add'} Item</button>
     </form>
   );
-}
+};
 
 export default ItemForm;
