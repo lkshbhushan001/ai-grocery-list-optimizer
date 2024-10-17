@@ -12,7 +12,7 @@ const ItemForm = ({ currentItem, setCurrentItem }) => {
       } else {
         await createItem({ name });
       }
-      setCurrentItem(null);  // Reset after creating/updating
+      setCurrentItem(null); 
     } catch (error) {
       console.error('Error submitting form:', error);
     }
